@@ -21,7 +21,13 @@ export async function getServerSideProps(context) {
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function Home({ disneyVideos, productivityVideos, travelVideos, popularVideos }) {
+export default function Home({ 
+  disneyVideos, 
+  productivityVideos, 
+  travelVideos, 
+  popularVideos,
+
+}) { 
   return (
     <>
       <Head>
