@@ -12,8 +12,6 @@ export async function middleware(req, ev) {
         userId ||
         pathname.includes("/static")
     ) {
-        console.log("redirected");
-
         return NextResponse.next();
     };
 

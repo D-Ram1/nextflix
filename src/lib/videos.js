@@ -14,7 +14,6 @@ const fetchVideos = async (url) => {
 export const getCommonVideos = async (url) => {
     try {
         const isDev = process.env.DEVELOPMENT;
-        console.log({ isDev });
         const data = isDev ? videoTestData : await fetchVideos(url);
 
         if (data?.error) {
@@ -38,7 +37,7 @@ export const getCommonVideos = async (url) => {
         });
     }
     catch (error) {
-        console.log('Something went wrong with video library', error);
+        console.error('Something went wrong with video library', error);
         return [];
     }
 };

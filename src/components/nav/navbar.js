@@ -20,13 +20,11 @@ const NavBar = () => {
             try {
                 const { email, issuer } = await magic.user.getInfo();
                 const didToken = await magic.user.getIdToken();
-                console.log({ didToken });
                 if (email) {
-                    console.log(email);
                     setUsername(email);
                 }
             } catch (error) {
-                console.log("Error retrieving email:", error);
+                console.error("Error retrieving email:", error);
             }
         }
         getUsername();

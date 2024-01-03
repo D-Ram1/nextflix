@@ -8,5 +8,3 @@ export const createMagic = () => {
 };
 
 export const magic = createMagic();
-
-console.log("magic setup", magic);

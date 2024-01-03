@@ -107,7 +107,6 @@ export async function createNewUser(token, metadata) {
     },
     token
   );
-  console.log("createNewUser response:", { response, issuer });
   return response;
 };
 
@@ -131,7 +130,6 @@ export async function isNewUser(token, issuer) {
     },
     token
   );
-  console.log("isNewUser response:", { response, issuer });
   return response?.data?.users?.length === 0;
 };
 
