@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-import Loading from '../../components/loading/loading';
+import Loading from '../components/loading/loading';
 
-import { magic } from '../../lib/magic-client';
+import { magic } from '../lib/magic-client';
 
 import '@/styles/globals.css';
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 import Image from 'next/image';
 
@@ -11,6 +12,7 @@ import { magic } from '../../lib/magic-client';
 const NavBar = () => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [username, setUsername] = useState('');
+    const [didToken, setDidToken] = useState('');
     const router = useRouter();
 
     useEffect(() => {
@@ -49,8 +51,15 @@ const NavBar = () => {
         e.preventDefault();
 
         try {
-            await magic.user.logout();
-            console.log(await magic.user.isLoggedIn());
+            const response = await fetch("api/logout", {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${didToken}`,
+                    "Content-type": "application/json",
+                },
+            });
+
+            const res = response.json();
             router.push('/login');
         } catch (error) {
             console.error("Error logging out", error);
@@ -61,11 +70,13 @@ const NavBar = () => {
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
-                <a className={styles.logoLink} href='/'>
-                    <div className={styles.logoWrapper}>
-                        <Image src='/static/netflix.svg' alt="Netflix logo" width={128} height={34} />
-                    </div>
-                </a>
+                <Link legacyBehavior className={styles.logoLink} href='/'>
+                    <a>
+                        <div className={styles.logoWrapper}>
+                            <Image src='/static/netflix.svg' alt="Netflix logo" width={128} height={34} />
+                        </div>
+                    </a>
+                </Link>
                 <ul className={styles.navItems}>
                     <li className={styles.navItem} onClick={handleOnClickHome}>Home</li>
                     <li className={styles.navItem2} onClick={handleOnClickMyList}>My List</li>

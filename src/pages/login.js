@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import styles from '../styles/login.module.css';
 
-import { magic } from '../../lib/magic-client';
+import { magic } from '../lib/magic-client';
 
 const Login = () => {
     const [email, setEmail] = useState('')
@@ -40,67 +40,77 @@ const Login = () => {
         e.preventDefault();
 
         if (email) {
-            if (email === "danielramirez051@outlook.com") {
-                // log in a user by their email
-                try {
-                    setIsLoading(true);
+            // log in a user by their email
+            try {
+                setIsLoading(true);
 
-                    const didToken = await magic.auth.loginWithMagicLink({
-                        email,
+                const didToken = await magic.auth.loginWithMagicLink({
+                    email,
+                });
+                console.log({ didToken });
+                if (didToken) {
+                    const response = await fetch("api/login", {
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${didToken}`,
+                            "Content-type": "application/json",
+                        },
                     });
-                    console.log({ didToken });
 
-                    if (didToken) {
-                        router.push('/');
-                    }
-                } catch (error) {
-                    // Handle errors if required!
-                    console.log("Something went wrong logging in with Magic", error);
-                    setIsLoading(false);
-                }
-            } else {
+                    const loggedInResponse = await response.json();
+
+                    if (loggedInResponse.done) {
+                        console.log({ loggedInResponse })
+                        router.push("/");
+                    } else {
+                        setIsLoading(false);
+                        setUserMsg("Something went wrong loggin in");
+                    };
+                };
+            } catch (error) {
+                // Handle errors if required!
+                console.log("Something went wrong logging in with Magic", error);
                 setIsLoading(false);
-                setUserMsg("Something went wrong logging in")
-            }
+            };
         } else {
             // show user message
             setIsLoading(false);
             setUserMsg("Please enter a vaild email address");
-        }
-    };
-
-    const handleLoginWithEnterKey = async (e) => { //same function as handleLoginWithEmail, but will be run when user hits enter key instead of Sign In button.
-        if (e.keyCode === 13) { // if user presses enter key on keyboard
-            if (email) {
-                if (email === "danielramirez051@outlook.com") {
-                    // log in a user by their email
-                    try {
-                        setIsLoading(true);
-
-                        const didToken = await magic.auth.loginWithMagicLink({
-                            email,
-                        });
-                        console.log({ didToken });
-
-                        if (didToken) {
-                            router.push('/');
-                        }
-                    } catch (error) {
-                        // Handle errors if required!
-                        console.log("Something went wrong logging in with Magic", error);
-                        setIsLoading(false);
-                    }
-                } else {
-                    setIsLoading(false);
-                    setUserMsg("Something went wrong logging in")
-                }
-            } else {
-                // show user message
-                setIsLoading(false);
-                setUserMsg("Please enter a vaild email address");
-            }
         };
     };
+
+    // const handleLoginWithEnterKey = async (e) => { //same function as handleLoginWithEmail, but will be run when user hits enter key instead of Sign In button.
+    //     if (e.keyCode === 13) { // if user presses "Enter" key on keyboard
+    //         if (email) {
+    //             if (email === "danielramirez051@outlook.com") {
+    //                 // log in a user by their email
+    //                 try {
+    //                     setIsLoading(true);
+
+    //                     const didToken = await magic.auth.loginWithMagicLink({
+    //                         email,
+    //                     });
+    //                     console.log({ didToken });
+
+    //                     if (didToken) {
+    //                         router.push('/');
+    //                     }
+    //                 } catch (error) {
+    //                     // Handle errors if required!
+    //                     console.log("Something went wrong logging in with Magic", error);
+    //                     setIsLoading(false);
+    //                 }
+    //             } else {
+    //                 setIsLoading(false);
+    //                 setUserMsg("Something went wrong logging in")
+    //             }
+    //         } else {
+    //             // show user message
+    //             setIsLoading(false);
+    //             setUserMsg("Please enter a vaild email address");
+    //         }
+    //     };
+    // };
 
 
     return ( // Rendering Page
@@ -130,7 +140,7 @@ const Login = () => {
                         placeholder="Enter Email to Sign Up/In"
                         className={styles.emailInput}
                         onChange={handleOnChangeEmail}
-                        onKeyDown={handleLoginWithEnterKey}
+                    // onKeyDown={handleLoginWithEnterKey}
                     />
 
                     <p className={styles.userMsg}>{userMsg}</p>

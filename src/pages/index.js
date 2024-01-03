@@ -1,33 +1,46 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import { Inter } from 'next/font/google';
 
 import styles from '@/styles/Home.module.css';
 
-import Banner from '../../components/banner/banner';
-import NavBar from '../../components/nav/navbar';
-import SectionCards from '../../components/card/section-cards';
+import Banner from '../components/banner/banner';
+import NavBar from '../components/nav/navbar';
+import SectionCards from '../components/card/section-cards';
 
-import { getVideos, getPopularVideos } from "../../lib/videos";
+import { getVideos, getPopularVideos, getWatchItAgainVideos } from "../lib/videos";
+import { redirectUser } from '../../utils/redirectUser';
 
 export async function getServerSideProps(context) {
+  const { userId, token } = await redirectUser(context);
+  if (!userId) {
+    return {
+      props: {},
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  };
+  const watchItAgainVideos = await getWatchItAgainVideos(userId, token);
+
   const disneyVideos = await getVideos("Disney trailer");
   const productivityVideos = await getVideos("Productivity");
   const travelVideos = await getVideos("Travel");
   const popularVideos = await getPopularVideos();
 
-  return { props: { disneyVideos, productivityVideos, travelVideos, popularVideos } }; // will be passed to the page component as props
+  return { props: { disneyVideos, productivityVideos, travelVideos, popularVideos, watchItAgainVideos } }; // will be passed to the page component as props
 };
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function Home({ 
-  disneyVideos, 
-  productivityVideos, 
-  travelVideos, 
+export default function Home({
+  disneyVideos,
+  productivityVideos,
+  travelVideos,
   popularVideos,
+  watchItAgainVideos = [],
 
-}) { 
+}) {
   return (
     <>
       <Head>
@@ -48,6 +61,7 @@ export default function Home({
 
         <div className={styles.sectionWrapper}>
           <SectionCards title="Disney" videos={disneyVideos} size="large" />
+          <SectionCards title="Watch it again" videos={watchItAgainVideos} size="small" />
           <SectionCards title="Travel" videos={travelVideos} size="small" />
           <SectionCards title="Productivty" videos={productivityVideos} size="medium" />
           <SectionCards title="Popular" videos={popularVideos} size="small" />

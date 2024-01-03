@@ -1,4 +1,5 @@
 import videoTestData from "../data/videos.json";
+import { getWatchedVideos, getMyListVideos } from "./db/hasura";
 
 const fetchVideos = async (url) => {
     const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
@@ -27,7 +28,7 @@ export const getCommonVideos = async (url) => {
 
             return {
                 title: snippet?.title,
-                imgUrl: snippet.thumbnails.high.url,
+                imgUrl: `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
                 id,
                 description: snippet.description,
                 publishTime: snippet.publishedAt,
@@ -57,4 +58,28 @@ export const getPopularVideos = () => {
 export const getYoutubeVideoById = (videoId) => {
     const URL = `videos?part=snippet%2CcontentDetails%2Cstatistics&id=${videoId}`;
     return getCommonVideos(URL);
+};
+
+export const getWatchItAgainVideos = async (userId, token) => {
+    const videos = await getWatchedVideos(userId, token);
+    return (
+        videos?.map((video) => {
+            return {
+                id: video.videoId,
+                imgUrl: `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`,
+            };
+        }) || []
+    );
+};
+
+export const getMyList = async (userId, token) => {
+    const videos = await getMyListVideos(userId, token);
+    return (
+        videos?.map((video) => {
+            return {
+                id: video.videoId,
+                imgUrl: `https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`,
+            };
+        }) || []
+    );
 };
