@@ -56,7 +56,7 @@
     max-height: 50vh
         /* 208px */
     ;
-    /* overflow-y: hidden; */
+    overflow-y: hidden;
     overflow-y: scroll;
 }
 
@@ -93,8 +93,6 @@
     margin-top: 0.75rem
         /* 12px */
     ;
-    overflow-y: hidden;
-    /*Just added*/
 }
 
 .col2 {
