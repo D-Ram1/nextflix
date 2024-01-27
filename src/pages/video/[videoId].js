@@ -105,7 +105,6 @@ const Video = ({ video }) => {
     return (
         <div className={styles.container}>
             <NavBar />
-
             <Modal
                 isOpen={true}
                 contentLabel="Watch the video"
@@ -120,7 +119,6 @@ const Video = ({ video }) => {
                     width="100%"
                     height="360"
                     src={`https://www.youtube.com/embed/${videoId}?autoplay=0&origin=http://example.com&controls=0&rel=1`}
-                    frameBorder="0"
                 >
                 </iframe>
 
